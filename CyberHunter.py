@@ -1,18 +1,18 @@
 # this code is writen by:
-# Name: Yousef Talal Alzahrani
-# ID: 1637129
-# Name: Nawaf Sami Alaamri
-# ID: 1637020
-# Name: Abdullah Mohammed Basheer
-# ID: 1637363
+# Name: Yousef Talal Alzahrani - Git account:
+# Name: Nawaf Sami Alaamri - Git account:
+# Name: Abdullah Mohammed Basheer - Git account: https://github.com/x3bodee11
 
-import pickle
+
+# these are the imports needed in the program
+import pickle # deserialize the ML object CyberHunter997
 import os
 import math
-import re
+import re # regular expressions
+from PyQt5 import QtCore, QtGui, QtWidgets # GUI
+# encryption and decryption
 import base64
 import binascii
-from PyQt5 import QtCore, QtGui, QtWidgets
 from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -22,12 +22,13 @@ from cryptography.fernet import InvalidToken,InvalidSignature
 # Home Page
 class Ui_Dialog1(object):
 
+    # this is to setup the gui window size, colors, pic, ... etc.
     def setupUi(self, Dialog1):
         Dialog1.setObjectName("Dialog")
         Dialog1.setFixedSize(640, 480)
         Dialog1.setStyleSheet("background-color: rgb(237, 241, 254);")
         Dialog1.setWindowFlag(QtCore.Qt.WindowMinimizeButtonHint)
-        Dialog1.setWindowIcon(QtGui.QIcon('output-onlinepngtools.ico'))
+        Dialog1.setWindowIcon(QtGui.QIcon('img\output-onlinepngtools.ico'))
         self.frame_3 = QtWidgets.QFrame(Dialog1)
         self.frame_3.setGeometry(QtCore.QRect(40, 0, 41, 491))
         self.frame_3.setStyleSheet("background-color: rgb(255, 255, 255);")
@@ -43,7 +44,7 @@ class Ui_Dialog1(object):
         self.label = QtWidgets.QLabel(Dialog1)
         self.label.setGeometry(QtCore.QRect(230, 40, 181, 71))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("output-onlinepngtools.png"))
+        self.label.setPixmap(QtGui.QPixmap("img\output-onlinepngtools.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(Dialog1)
@@ -73,14 +74,14 @@ class Ui_Dialog1(object):
         self.SmartSearch = QtWidgets.QCommandLinkButton(Dialog1)
         self.SmartSearch.setGeometry(QtCore.QRect(220, 260, 201, 61))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("img\search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.SmartSearch.setIcon(icon)
         self.SmartSearch.setIconSize(QtCore.QSize(40, 40))
         self.SmartSearch.setObjectName("SmartSearch")
         self.Encrypt_Decrypt = QtWidgets.QCommandLinkButton(Dialog1)
         self.Encrypt_Decrypt.setGeometry(QtCore.QRect(220, 340, 201, 61))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("lock.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("img\lock.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.Encrypt_Decrypt.setIcon(icon1)
         self.Encrypt_Decrypt.setIconSize(QtCore.QSize(40, 40))
         self.Encrypt_Decrypt.setObjectName("Encrypt_Decrypt")
@@ -89,6 +90,7 @@ class Ui_Dialog1(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog1)
         Dialog1.setTabOrder(self.SmartSearch, self.Encrypt_Decrypt)
 
+    # sets the text and titles of the widgets
     def retranslateUi(self, Dialog1):
         _translate = QtCore.QCoreApplication.translate
         Dialog1.setWindowTitle(_translate("Dialog", "Cyber Hunter - Home Page"))
@@ -103,6 +105,11 @@ class Ui_Dialog1(object):
 # Smart Search Page
 class Ui_Dialog2(object):
 
+    # this method to validate the visa card check sum number
+    # for more info check this link :
+    # https://codereview.stackexchange.com/a/209689
+    # another source :
+    # https://github.com/anuragrana/Python-Scripts/blob/master/credit_card_validator.py
     def validate_credit_card_number(card_number):
         temp_list = [int(c) for c in str(card_number)]
 
@@ -118,12 +125,14 @@ class Ui_Dialog2(object):
 
         return total_sum % 10 == 0
 
+    # count character in line
     def count_chars(txt):
         r = 0
         for c in txt:
             r = r + 1
         return r
 
+    # converter for CSV purposes
     def phone(x):
         t = 0
         if (x < 1):
@@ -136,6 +145,7 @@ class Ui_Dialog2(object):
             t = 3
         return t
 
+    # converter for CSV purposes
     def fileSize(x):
         t = 0
         if (x < 1):
@@ -148,6 +158,7 @@ class Ui_Dialog2(object):
             t = 3
         return t
 
+    # converter for CSV purposes
     def password(x):
         t = 0
         if (x < 1):
@@ -160,6 +171,7 @@ class Ui_Dialog2(object):
             t = 3
         return t
 
+    # converter for CSV purposes
     def visa(x):
         t = 0
         if (x < 1):
@@ -173,6 +185,7 @@ class Ui_Dialog2(object):
 
         return t
 
+    # this will go through the file and gather information for ML.
     def scan_file(t):
         v = 0;
         max = 0;
@@ -246,19 +259,27 @@ class Ui_Dialog2(object):
         row = [filename, Ui_Dialog2.fileSize(inKilobyte), avg, max, Ui_Dialog2.visa(v), Ui_Dialog2.phone(ph), Ui_Dialog2.password(pas),msg]
         return row
 
+    # smart search if input is only a file path not a directory.
     def SSearch2(self):
-        Scounter=0
+        Scounter=0 # sensitive files counter
         result = ""
         print("Start Smart Search")
         path = self.dirEntry.text()
-        pickle_in = open("CyberHunter997.pickle", "rb")
-        CyperHunter = pickle.load(pickle_in)
-        #print("1")
+
+        # load the ML object
+        try:
+            pickle_in = open("ML\CyberHunter997.pickle", "rb")
+            CyperHunter = pickle.load(pickle_in)
+        except:
+            self.Popmsg("Error in loding")
+
+        # scan file for gathering features fot ML
         t = Ui_Dialog2.scan_file(path)
-        #print("2")
+
         result=t[7]+"Running Random Forest algorithm on files....\nSensitive Files Names:\n"
+        # this is the features we will predict if the file sensitive or not based on them.
         p = CyperHunter.predict([[t[1], t[2], t[3], t[4], t[5], t[6]]])
-        #print("3")
+
         if (round(p[0]) == 1):
             Scounter=Scounter+1
             result = result + str(t[0]) + "\n"
@@ -268,13 +289,13 @@ class Ui_Dialog2(object):
             result=result+t[0]+"\nIt's not Sensitive\nFinished scanning."
 
 
-        #print("result :     ", result)
         self.resultEntry.setPlainText(result)
         if(path==""):
             self.Popmsg("Please enter a path")
         else:
             self.Popmsg("Finished searching through the file")
 
+    # this is method to edit the msg to display it to the user.
     def msgEdit(self,t,msg):
         if(t==1):
             msg=msg+"Running Random Forest algorithm on files....\nSensitive Files Names:\n"
@@ -282,84 +303,92 @@ class Ui_Dialog2(object):
         else:
             return ""
 
+    # smart search if input is a directory path not a file path
     def SSearch(self):
-        fileCounter=0
-        c=1
-        Scounter=0
-        result=""
+        fileCounter=0 # files counter
+        c=1 # counter
+        Scounter=0 # sensitive files counter
+        result="" # printed msg
         print("Start Smart Search")
         path2=self.dirEntry.text()
-        pickle_in = open("CyberHunter997.pickle", "rb")
-        CyperHunter = pickle.load(pickle_in)
+        # load the ML object
+        try:
+            pickle_in = open("ML\CyberHunter997.pickle", "rb")
+            CyperHunter = pickle.load(pickle_in)
+        except:
+            self.Popmsg("Error in loading")
+
+        # go through files in given directory and scan each file end with txt
         for root, dirs, files in os.walk(path2):
             for file in files:
-                if file.endswith(".txt"):
+                if file.lower().endswith(".txt"):
                     fileCounter=fileCounter+1
                     path = os.path.join(root, file)
                     t = Ui_Dialog2.scan_file(path)
                     result=result+self.msgEdit(c,t[7])
                     c=c+1
+                    # this is the features we will predict if the file sensitive or not based on them.
                     p = CyperHunter.predict([[t[1], t[2], t[3], t[4], t[5], t[6]]])
                     if(round(p[0])==1):
                         result = result + t[0]+"\n"
                         Scounter=Scounter+1
 
+        # set the msg that will be displayed to the user
         result=result+"Directory scanned: \n"+path2+"\nTotal files scanned: "+str(fileCounter)+"\nPotentially Sensitive Files: "+str(Scounter)+"\nFinished scanning"
         self.resultEntry.setPlainText(result)
+
+        # pop up msg for errors and finishing.
         if (path == ""):
             self.Popmsg("Please enter a path")
         else:
             self.Popmsg("Finished searching through the files")
 
+    # this method will encrypt the sensitive files that smart search has detect
     def encryptfiles(self,g):
-        password = self.S_pas_Entry.text().encode()
-        fff = b'{,\xc8\x81\xf5l\x1e\x0f\x9f\xa9\xe0\xae\x82\xe6[f'
-        kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=fff, iterations=100000, backend=default_backend())
-        key = base64.urlsafe_b64encode(kdf.derive(password))
-
-        for in_f in g:
-            with open(in_f, 'rb')as f:
-                data = f.read()
-
-            os.remove(in_f)
-            fernet = Fernet(key)
-            encrypted = fernet.encrypt(data)
-
-            with open(in_f, 'wb')as f:
-                f.write(encrypted)
-        self.Popmsg("Encryption Completed")
-
-    def encryptf(self,g):
         try:
-            print(" ")
-            password = self.S_pas_Entry.text()
-            password = password.encode()
+            print("")
+            # take password from the GUI input
+            password = self.S_pas_Entry.text().encode()
+
+            # this is a salt for encryption
             fff = b'{,\xc8\x81\xf5l\x1e\x0f\x9f\xa9\xe0\xae\x82\xe6[f'
-            kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=fff, iterations=100000,
-                             backend=default_backend())
+            # generate the hash function
+            kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=fff,
+                             iterations=100000, backend=default_backend())
+            # encode the hash with password
             key = base64.urlsafe_b64encode(kdf.derive(password))
+
+            # this loop will read the hole file and store it in data
+            # then remove the file after that we will encrypt the data
+            # then store it again in new file with the same name.
             for in_f in g:
                 with open(in_f, 'rb')as f:
                     data = f.read()
 
+                os.remove(in_f)
                 fernet = Fernet(key)
                 encrypted = fernet.encrypt(data)
 
-                os.remove(in_f)
                 with open(in_f, 'wb')as f:
                     f.write(encrypted)
-
-            print("\nEncryption Completed\n")
+            # send the message to the pop up GUI
             self.Popmsg("Encryption Completed")
         except FileNotFoundError:
             print("File is not in path")
 
+    # this method will filter the input from the data that has been displayed
+    # in result section in smart search page
+    # its will be filtered to git the paths of sensitive files, to encrypt them.
     def cho(self):
+        # take the txt from the result section
         t = self.resultEntry.toPlainText()
 
+        # if this message in input then ignore encryption in this page.
         if ("It's not Sensitive" in t):
             print("File not Sensitive")
             self.Popmsg("File not Sensitive if you want to encrypt go to Encryption/Decryption page")
+        # if its not then
+        # we will split the input to section to git the paths.
         else:
             f = t.split("Analysing Files....\nRunning Random Forest algorithm on files....\nSensitive Files Names:\n")
             s = ""
@@ -377,27 +406,37 @@ class Ui_Dialog2(object):
             g = list()
             for z in q:
                 z=str(z)
-                if (z.endswith(".txt") | z.endswith(".TXT")):
+
+                if (z.lower().endswith(".txt")):
                     g.append(z)
+            # this to check if the input has any thing in it or not
+            # if there is nothing then do nothing :] :]
             if(len(g)==0):
                 print("Do Nothing")
+            # if its has something then call encryption method
             else:
                 Ui_Dialog2.encryptfiles(self, g)
 
+    # this method will decide if its will go with smart search for directory or file
     def cho2(self):
-
+        # this will take the input from GUI
         path = self.dirEntry.text()
-        if(path.endswith(".txt") | path.endswith(".TXT")):
+        # convert it to lower case
+        lwpath = path.lower()
+        # if its ends with .txt then call smart search for file.
+        if(lwpath.endswith(".txt")):
             Ui_Dialog2.SSearch2(self)
+        # if its not end with .txt then its a directory.
         else:
             Ui_Dialog2.SSearch(self)
 
+    # this is to setup the gui window size, colors, pic, ... etc.
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.setFixedSize(640, 492)
         Dialog.setStyleSheet("background-color: rgb(237, 241, 254);")
         Dialog.setWindowFlag(QtCore.Qt.WindowMinimizeButtonHint)
-        Dialog.setWindowIcon(QtGui.QIcon('output-onlinepngtools.ico'))
+        Dialog.setWindowIcon(QtGui.QIcon('img\output-onlinepngtools.ico'))
         self.msg=QtWidgets.QMessageBox()
         self.frame_3 = QtWidgets.QFrame(Dialog)
         self.frame_3.setGeometry(QtCore.QRect(40, 0, 41, 491))
@@ -414,7 +453,7 @@ class Ui_Dialog2(object):
         self.label = QtWidgets.QLabel(Dialog)
         self.label.setGeometry(QtCore.QRect(260, 20, 171, 71))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("output-onlinepngtools.png"))
+        self.label.setPixmap(QtGui.QPixmap("img\output-onlinepngtools.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(Dialog)
@@ -459,7 +498,7 @@ class Ui_Dialog2(object):
         self.Search = QtWidgets.QCommandLinkButton(Dialog)
         self.Search.setGeometry(QtCore.QRect(300, 140, 101, 61))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("img\search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.Search.setIcon(icon)
         self.Search.setIconSize(QtCore.QSize(40, 40))
         self.Search.setObjectName("Search")
@@ -470,7 +509,7 @@ class Ui_Dialog2(object):
         self.Encrypt = QtWidgets.QCommandLinkButton(Dialog)
         self.Encrypt.setGeometry(QtCore.QRect(230, 420, 111, 61))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("cyber-security.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("img\cyber-security.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.Encrypt.setIcon(icon1)
         self.Encrypt.setIconSize(QtCore.QSize(40, 40))
         self.Encrypt.setObjectName("Encrypt")
@@ -480,7 +519,7 @@ class Ui_Dialog2(object):
         self.Home = QtWidgets.QCommandLinkButton(Dialog)
         self.Home.setGeometry(QtCore.QRect(360, 420, 111, 61))
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("home-run.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("img\home-run.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.Home.setIcon(icon2)
         self.Home.setIconSize(QtCore.QSize(40, 40))
         self.Home.setObjectName("Home")
@@ -494,6 +533,7 @@ class Ui_Dialog2(object):
         Dialog.setTabOrder(self.S_pas_Entry, self.Encrypt)
         Dialog.setTabOrder(self.Encrypt, self.Home)
 
+    # sets the text and titles of the widgets
     def retranslateUi(self, SmartSearchPage_2):
         _translate = QtCore.QCoreApplication.translate
         SmartSearchPage_2.setWindowTitle(_translate("SmartSearchPage_2", "Cyber Hunter - Smart Search"))
@@ -505,10 +545,11 @@ class Ui_Dialog2(object):
         self.Home.setText(_translate("SmartSearchPage_2", "Home"))
         self.label_4.setText(_translate("SmartSearchPage_2", "Password :"))
 
+    # pop up message, msg its the message will be passed to display it.
     def Popmsg(self,msg):
 
         try:
-            self.msg.setWindowIcon(QtGui.QIcon('output-onlinepngtools.ico'))
+            self.msg.setWindowIcon(QtGui.QIcon('img\output-onlinepngtools.ico'))
             self.msg.setWindowTitle("Cyber Hunter")
             self.msg.setText(msg)
             self.msg.setIcon(QtWidgets.QMessageBox.Information)
@@ -521,25 +562,36 @@ class Ui_Dialog2(object):
 # Encryption/Decryption page
 class Ui_Dialog3(object):
 
+    # this method will encrypt the given file from its path
     def encryptf(self):
         try:
-            print(" ")
+            # take password to encrypt the file with
             password = self.pas_Entry.text()
+            # take the path of the input file
             in_f = self.Filepath_Entry.text()
-            in_o = self.Filepath_Entry.text()
+            # take the path of the output file it's the same as the input path :]
+            in_o = in_f
+            # encode the password
             password = password.encode()
+            # this is the salt
             fff = b'{,\xc8\x81\xf5l\x1e\x0f\x9f\xa9\xe0\xae\x82\xe6[f'
+            # create the hash
             kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=fff, iterations=100000,
                              backend=default_backend())
+            # encode it with the password
             key = base64.urlsafe_b64encode(kdf.derive(password))
 
+            # open the file and read all the data in it and store it at data
             with open(in_f, 'rb')as f:
                 data = f.read()
-
+            # create the fernet with the key
             fernet = Fernet(key)
+            # encrypt the data
             encrypted = fernet.encrypt(data)
-
+            # remove the input file
             os.remove(in_f)
+            # create the output file with the same name and path
+            # then store the data of this file in it.
             with open(in_o, 'wb')as f:
                 f.write(encrypted)
 
@@ -548,25 +600,39 @@ class Ui_Dialog3(object):
         except FileNotFoundError:
             self.Popmsg("File is not in path")
             print("File is not in path")
-
+    # this method will decrypt the given file from its path
     def decrypt(self):
         try:
-            print(" ")
+            # take password to decrypt the file with
             password = self.pas_Entry.text()
+            # take the path of the input file
             in_f = self.Filepath_Entry.text()
-            in_o = self.Filepath_Entry.text()
+            # take the path of the output file it's the same as the input path :]
+            in_o = in_f
+            # encode the password
             password = password.encode()
+            # this is the salt
             fff = b'{,\xc8\x81\xf5l\x1e\x0f\x9f\xa9\xe0\xae\x82\xe6[f'
+            # create the hash
             kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=fff, iterations=100000,
                              backend=default_backend())
+            # encode it with the password
             key = base64.urlsafe_b64encode(kdf.derive(password))
+
+            # open the file and read all the data in it and store it at data
             with open(in_f, 'rb')as f:
                 data = f.read()
+            # create the fernet with the key
             fernet = Fernet(key)
+            # decrypt the data
             encrypted = fernet.decrypt(data)
+            # remove the input file
             os.remove(in_f)
+            # create the output file with the same input file
+            # and put the decrypted data in it.
             with open(in_o, 'wb')as f:
                 f.write(encrypted)
+
             print("\nDecryption Completed\n")
             self.Popmsg("Decryption Completed")
         except FileNotFoundError:
@@ -582,12 +648,13 @@ class Ui_Dialog3(object):
             self.Popmsg("Wrong password !!")
             print("Wrong password")
 
+    # this is to setup the gui window size, colors, pic, ... etc.
     def setupUi(self, Dialog3):
         Dialog3.setObjectName("Dialog")
         Dialog3.setFixedSize(640, 480)
         Dialog3.setWindowFlag(QtCore.Qt.WindowMinimizeButtonHint)
         Dialog3.setStyleSheet("background-color: rgb(237, 241, 254);")
-        Dialog3.setWindowIcon(QtGui.QIcon('output-onlinepngtools.ico'))
+        Dialog3.setWindowIcon(QtGui.QIcon('img\output-onlinepngtools.ico'))
         self.msg = QtWidgets.QMessageBox()
         self.frame_3 = QtWidgets.QFrame(Dialog3)
         self.frame_3.setGeometry(QtCore.QRect(40, 0, 41, 491))
@@ -604,13 +671,13 @@ class Ui_Dialog3(object):
         self.label = QtWidgets.QLabel(Dialog3)
         self.label.setGeometry(QtCore.QRect(260, 60, 171, 71))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("output-onlinepngtools.png"))
+        self.label.setPixmap(QtGui.QPixmap("img\output-onlinepngtools.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
         self.Home1 = QtWidgets.QCommandLinkButton(Dialog3)
         self.Home1.setGeometry(QtCore.QRect(280, 370, 111, 61))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("home-run.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("img\home-run.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.Home1.setIcon(icon)
         self.Home1.setIconSize(QtCore.QSize(40, 40))
         self.Home1.setObjectName("Home1")
@@ -644,7 +711,7 @@ class Ui_Dialog3(object):
         self.Decrypt = QtWidgets.QCommandLinkButton(Dialog3)
         self.Decrypt.setGeometry(QtCore.QRect(230, 250, 111, 61))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("encryption.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("img\encryption.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.Decrypt.setIcon(icon1)
         self.Decrypt.setIconSize(QtCore.QSize(40, 40))
         self.Decrypt.setObjectName("Decrypt")
@@ -654,7 +721,7 @@ class Ui_Dialog3(object):
         self.Encrypt1 = QtWidgets.QCommandLinkButton(Dialog3)
         self.Encrypt1.setGeometry(QtCore.QRect(360, 250, 111, 61))
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("cyber-security.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("img\cyber-security.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.Encrypt1.setIcon(icon2)
         self.Encrypt1.setIconSize(QtCore.QSize(40, 40))
         self.Encrypt1.setObjectName("Encrypt1")
@@ -669,6 +736,7 @@ class Ui_Dialog3(object):
         Dialog3.setTabOrder(self.Decrypt, self.Encrypt1)
         Dialog3.setTabOrder(self.Encrypt1, self.Home1)
 
+    # sets the text and titles of the widgets
     def retranslateUi(self, Dialog3):
         _translate = QtCore.QCoreApplication.translate
         Dialog3.setWindowTitle(_translate("Dialog", "Cyber Hunter - Encryption / Decryption"))
@@ -679,10 +747,11 @@ class Ui_Dialog3(object):
         self.Decrypt.setText(_translate("Dialog", "Decrypt"))
         self.Encrypt1.setText(_translate("Dialog", "Encrypt"))
 
+    # pop up message, msg its the message will be passed to display it.
     def Popmsg(self,msg):
 
         try:
-            self.msg.setWindowIcon(QtGui.QIcon('output-onlinepngtools.ico'))
+            self.msg.setWindowIcon(QtGui.QIcon('img\output-onlinepngtools.ico'))
             self.msg.setWindowTitle("Cyber Hunter")
             self.msg.setText(msg)
             self.msg.setIcon(QtWidgets.QMessageBox.Information)
@@ -693,6 +762,7 @@ class Ui_Dialog3(object):
 # --------------------------------
 
 # Dialog = Home page
+# to set up close and open the windows
 class Dialog(QtWidgets.QDialog, Ui_Dialog1):
     def __init__(self, parent=None):
         super(Dialog, self).__init__(parent)
@@ -701,6 +771,7 @@ class Dialog(QtWidgets.QDialog, Ui_Dialog1):
         self.SmartSearch.clicked.connect(self.close)
 
 # Dialog2 = Smart Search page
+# to set up close and open the windows
 class Dialog2(QtWidgets.QDialog, Ui_Dialog2):
     def __init__(self, parent=None):
         super(Dialog2, self).__init__(parent)
@@ -708,12 +779,14 @@ class Dialog2(QtWidgets.QDialog, Ui_Dialog2):
         self.Home.clicked.connect(self.close)
 
 # Dialog3 = Encryption/Decryption page
+# to set up close and open the windows
 class Dialog3(QtWidgets.QDialog, Ui_Dialog3):
     def __init__(self, parent=None):
         super(Dialog3, self).__init__(parent)
         self.setupUi(self)
         self.Home1.clicked.connect(self.close)
 
+# the start of the program from here
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
