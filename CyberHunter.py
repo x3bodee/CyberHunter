@@ -1,6 +1,6 @@
 # this code is writen by:
-# Name: Yousef Talal Alzahrani - Git account:
-# Name: Nawaf Sami Alaamri - Git account:
+# Name: Yousef Talal Alzahrani - Git account: https://github.com/Yosi-talal
+# Name: Nawaf Sami Alaamri - Git account: https://github.com/Nawaf-gtr
 # Name: Abdullah Mohammed Basheer - Git account: https://github.com/x3bodee11
 
 
