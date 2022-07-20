@@ -7,6 +7,6 @@ and offer an encryption to these files in order to add a further layer of securi
 
 Name: [Nawaf Sami Alaamri](https://github.com/Nawaf-gtr)
 
-Name: [Yousef Talal Alzahrani](https://github.com/Nawaf-gtr)
+Name: [Yousef Talal Alzahrani](https://github.com/Yosi-talal)
 
 Name: [Abdullah Basheer](https://github.com/x3bodee)
